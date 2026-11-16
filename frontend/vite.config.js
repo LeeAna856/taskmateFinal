@@ -45,9 +45,12 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    outDir: path.resolve(root, '../backend/public/build'),
-    emptyOutDir: true,
-    manifest: 'manifest.json',
-  },
+  
+build: {
+  outDir: process.env.VERCEL
+    ? path.resolve(root, 'dist')
+    : path.resolve(root, '../backend/public/build'),
+  emptyOutDir: true,
+  manifest: 'manifest.json',
+},
 })
