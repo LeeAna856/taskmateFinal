@@ -7,18 +7,13 @@ import laravel from 'laravel-vite-plugin'
 const root = path.dirname(fileURLToPath(import.meta.url))
 
 /**
- * The React single page application is built straight into the Laravel
- * `public/build` folder so the Blade shell can load it with @vite.
- *
- * Development : `npm run dev`  -> http://localhost:5173 (proxies /api to Laravel)
- * Production  : `npm run build` -> backend/public/build
+ * Render / local : the React app is built into the Laravel `public/build`
+ *                  folder and served by Blade through @vite.
+ * Vercel         : a normal Vite single page app (index.html entry) in `dist`.
  */
 export default defineConfig({
   envDir: path.resolve(root, '../backend'),
   plugins: [
-    
-    // On Vercel we build a normal Vite SPA (index.html entry).
-    // Everywhere else (Render / local) Laravel serves the build via @vite.
     ...(process.env.VERCEL
       ? []
       : [
@@ -52,12 +47,11 @@ export default defineConfig({
       },
     },
   },
-  
-build: {
-  outDir: process.env.VERCEL
-    ? path.resolve(root, 'dist')
-    : path.resolve(root, '../backend/public/build'),
-  emptyOutDir: true,
-  manifest: process.env.VERCEL ? false : 'manifest.json',
-},
+  build: {
+    outDir: process.env.VERCEL
+      ? path.resolve(root, 'dist')
+      : path.resolve(root, '../backend/public/build'),
+    emptyOutDir: true,
+    manifest: process.env.VERCEL ? false : 'manifest.json',
+  },
 })
