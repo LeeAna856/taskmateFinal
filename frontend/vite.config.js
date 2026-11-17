@@ -16,16 +16,23 @@ const root = path.dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   envDir: path.resolve(root, '../backend'),
   plugins: [
-    laravel({
-      publicDirectory: path.resolve(root, '../backend/public'),
-      buildDirectory: 'build',
-      hotFile: path.resolve(root, '../backend/public/hot'),
-      input: {
-        'src/main.jsx': path.resolve(root, 'src/main.jsx'),
-        'src/styles/index.css': path.resolve(root, 'src/styles/index.css'),
-      },
-      refresh: true,
-    }),
+    
+    // On Vercel we build a normal Vite SPA (index.html entry).
+    // Everywhere else (Render / local) Laravel serves the build via @vite.
+    ...(process.env.VERCEL
+      ? []
+      : [
+          laravel({
+            publicDirectory: path.resolve(root, '../backend/public'),
+            buildDirectory: 'build',
+            hotFile: path.resolve(root, '../backend/public/hot'),
+            input: {
+              'src/main.jsx': path.resolve(root, 'src/main.jsx'),
+              'src/styles/index.css': path.resolve(root, 'src/styles/index.css'),
+            },
+            refresh: true,
+          }),
+        ]),
     react(),
   ],
   server: {
@@ -51,6 +58,6 @@ build: {
     ? path.resolve(root, 'dist')
     : path.resolve(root, '../backend/public/build'),
   emptyOutDir: true,
-  manifest: 'manifest.json',
+  manifest: process.env.VERCEL ? false : 'manifest.json',
 },
 })

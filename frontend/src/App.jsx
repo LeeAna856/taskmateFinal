@@ -1,4 +1,3 @@
-```jsx
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import AppLayout from './components/layout/AppLayout'
@@ -130,4 +129,3 @@ function App() {
 }
 
 export default App
-```
