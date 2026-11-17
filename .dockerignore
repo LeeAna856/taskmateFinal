@@ -1,0 +1,11 @@
+.git
+**/node_modules
+backend/vendor
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/public/build
+backend/public/hot
+backend/storage/logs/*
+backend/database/database.sqlite
+*.md

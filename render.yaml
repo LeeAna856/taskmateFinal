@@ -1,0 +1,47 @@
+databases:
+  - name: taskmate-db
+    plan: free
+    databaseName: taskmate
+    user: taskmate
+
+services:
+  - type: web
+    name: taskmate
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: TaskMate
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false            # paste output of: php artisan key:generate --show
+      - key: APP_URL
+        sync: false            # e.g. https://taskmate.onrender.com
+      - key: FRONTEND_URL
+        sync: false            # same as APP_URL
+      - key: SANCTUM_STATEFUL_DOMAINS
+        sync: false            # host only, e.g. taskmate.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false            # same as APP_URL
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: taskmate-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: MAIL_MAILER
+        value: log             # change to smtp + MAIL_* vars for real password-reset emails
